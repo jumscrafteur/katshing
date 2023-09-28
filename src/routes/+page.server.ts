@@ -3,6 +3,10 @@ import { API_KEY } from '$env/static/private';
 
 export const load: PageServerLoad = async ({ fetch }) => {
     const res = await fetch(`http://data.fixer.io/api/latest?access_key=${API_KEY}`)
+
+    if (!res.ok) return { rates: {} }
+
+
     const data = await res.json() as {
         success: true
         timestamp: number
