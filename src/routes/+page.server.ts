@@ -18,6 +18,10 @@ export const load: PageServerLoad = async ({ fetch }) => {
         }
     }
 
+    console.log(data)
+
     return { rates: data.success ? data.rates : {} }
+
+    // return { rates: {} }
 
 };
