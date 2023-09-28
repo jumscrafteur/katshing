@@ -8,10 +8,10 @@
 	import { Input } from '$lib/components/ui/input';
 	import * as Select from '$lib/components/ui/select';
 	import { Separator } from '$lib/components/ui/separator';
+	import * as Tabs from '$lib/components/ui/tabs';
 
 	import { symbols } from '$lib/currency';
 	import CurrencyTable from './CurrencyTable.svelte';
-	import Section from './Section.svelte';
 
 	import { fav } from '$lib/store';
 
@@ -27,13 +27,13 @@
 			return Object.assign(cur, { [key]: rates[key] });
 		}, {});
 
-	console.log(favCurrencyRates);
-
 	let moneyValue = 1;
 	let selectedValue = { value: $fav[0], label: symbols[$fav[0]], disabled: false };
 </script>
 
-<div class="selector">
+<img src="/text_logo.svg" alt="text-logo" class="h-[10vh] m-auto" />
+
+<div class="grid grid-cols-[1fr_3fr] gap-2">
 	<Input type="number" placeholder="0,00" class="max-w" min="0" bind:value={moneyValue} />
 	<Select.Root bind:selected={selectedValue}>
 		<Select.Trigger class="max-w">
@@ -49,32 +49,21 @@
 		<Select.Input name="favoriteFruit" />
 	</Select.Root>
 </div>
-<Separator class="my-4 max-w" />
+<Separator class="my-2 max-w" />
 
-<div class="flex flex-col gap-5">
-	<Section title="Favories">
+<Tabs.Root value="fav">
+	<Tabs.List class="w-full grid grid-cols-2">
+		<Tabs.Trigger value="fav">Favories</Tabs.Trigger>
+		<Tabs.Trigger value="all">All</Tabs.Trigger>
+	</Tabs.List>
+	<Tabs.Content value="fav">
 		<CurrencyTable
 			{moneyValue}
 			selectedRate={favCurrencyRates[selectedValue.value]}
 			rates={favCurrencyRates}
 		/>
-	</Section>
-	<Section title="All">
+	</Tabs.Content>
+	<Tabs.Content value="all">
 		<CurrencyTable {moneyValue} selectedRate={rates[selectedValue.value]} {rates} />
-	</Section>
-</div>
-
-<!-- <Collapsible.Root>
-	<Collapsible.Trigger><h3 class="underline text-2xl">All</h3></Collapsible.Trigger>
-	<Collapsible.Content>
-		<CurrencyTable {moneyValue} selectedRate={rates[selectedValue.value]} {rates} />
-	</Collapsible.Content>
-</Collapsible.Root> -->
-
-<style>
-	.selector {
-		display: grid;
-		grid-template-columns: 1fr 3fr;
-		gap: 0.5rem;
-	}
-</style>
+	</Tabs.Content>
+</Tabs.Root>

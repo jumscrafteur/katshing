@@ -1,7 +1,12 @@
 import type { PageServerLoad } from './$types';
 import { API_KEY } from '$env/static/private';
+import { dev } from '$app/environment';
+import { rates } from '$lib/currency'
 
 export const load: PageServerLoad = async ({ fetch }) => {
+    if (dev)
+        return { rates }
+
     const res = await fetch(`http://data.fixer.io/api/latest?access_key=${API_KEY}`)
 
     if (!res.ok) return { rates: {} }
@@ -22,7 +27,6 @@ export const load: PageServerLoad = async ({ fetch }) => {
         }
     }
 
-    console.log(data)
 
     return { rates: data.success ? data.rates : {} }
 
